@@ -1,0 +1,21 @@
+{
+    "app_name": "Un Soir de Printemps",
+    "chromium-args": "--data-path='./saves/' --in-process-gpu --disable-transparency",
+    "main": "index.html",
+    "name": "unsoirdeprintemps",
+    "version": "0.1.0",
+    "webkit": {},
+    "window": {
+        "fullscreen": false,
+        "height": 640,
+        "icon": "I4.png",
+        "id": "unsoirdeprintemps",
+        "max_height": 640,
+        "max_width": 1000,
+        "min_height": 640,
+        "min_width": 1000,
+        "title": "Un Soir de Printemps",
+        "toolbar": true,
+        "width": 1000
+    }
+}

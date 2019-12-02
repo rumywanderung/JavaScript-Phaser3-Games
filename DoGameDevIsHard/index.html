@@ -1,0 +1,151 @@
+<html>
+
+<head>
+
+    <title>DoGameDevIsHard</title>
+    <script src="../DoGameDevIsHard/phaser.min.js"></script>
+
+</head>
+
+<body>
+
+    <script>
+        var config = {
+
+            type: Phaser.AUTO,
+            width: 1248,
+            height: 639,
+            physics: {
+                default: 'arcade'
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update,
+            }
+        };
+
+        var game = new Phaser.Game(config);
+        var textToDisplay = new Array();
+        var backgroundText = new Array();
+        var arrayBug = new Array();
+        var index = 0;
+        var score = 0;
+        var textie;
+        var timerBug;
+        var timeLeft;
+        var scoreAmount;
+
+
+        function preload() {
+            this.load.text('lorem', '../DoGameDevIsHard/Assets/mycode.txt');
+            this.load.image('bug', '../DoGameDevIsHard/Assets/bug2.png');
+            this.load.image('GO', '../DoGameDevIsHard/Assets/gameover.png');
+            this.load.image('WIN', '../DoGameDevIsHard/Assets/win2.png');
+            this.load.image('ui', '../DoGameDevIsHard/Assets/laptop2.png');
+            this.camera = this.cameras.add(0, 0, 1248, 300).setOrigin(0, 0);
+            this.camera.setBackgroundColor('rgba(0, 0, 0, 1)');
+        }
+
+        function create() {
+
+            timeLeft = this.add.text(300, 660, 'COUNTDOWN');
+            scoreAmount = this.add.text(500, 660, 'SCORE/5');
+            this.cameras.main.backgroundColor.setTo(0, 0, 0);
+            textie = this.cache.text.get('lorem');
+            textToDisplay = textie.split('\n');
+
+            // add lines
+
+            for (var i = 0; i < 151; i++) {
+                backgroundText[i] = this.make.text({
+                    x: 100,
+                    y: 0 + i * 40,
+                    text: textToDisplay[i],
+                    style: {
+                        fontSize: '23px',
+                        fontFamily: 'Arial',
+                        color: '#ffffff',
+                        align: 'left',
+                        padding: 10,
+                        lineSpacing: 20
+                    }
+                });
+            }
+            this.time.addEvent({
+                delay: 1000,
+                callback: updateText,
+                callbackScope: this
+            });
+
+            // add bugs
+
+            for (var i = 2; i < 33; i++) { // 31 bugs
+
+                timerBug = this.time.addEvent({
+                    delay: 500 * i,
+                    callback: Countdown,
+                    args: [i - 1],
+                    callbackScope: this
+                });
+            }
+            
+            this.add.image(0, 0, 'ui').setOrigin(0, 0);
+        }
+
+        function updateText() {
+            index++;
+            if (index >= textToDisplay.length - 21) {
+                index = 0;
+            }
+            for (var i = 0; i < 21; i++) {
+                backgroundText[i].text = textToDisplay[i + index];
+            }
+            this.time.addEvent({
+                delay: 100,
+                callback: updateText,
+                callbackScope: this
+            });
+        }
+
+        function Countdown(i) {
+
+            timeLeft.setText(31 - i);
+            scoreAmount.setText(score + '/5');
+
+            if (i < 31) {
+                arrayBug[i] = this.add.image(Phaser.Math.Between(250, 900), Phaser.Math.Between(100, 500), 'bug').setInteractive();
+                arrayBug[i].on('pointerdown', function(pointer) {
+                    arrayBug[i].destroy();
+                    score += 1;
+                });
+
+            } else {
+
+                if (score < 30) {
+                    gameover = this.add.image(0, 0, 'GO').setOrigin(0, 0);
+                    destroyBug();
+
+                } else {
+                    win = this.add.image(0, 0, 'WIN').setOrigin(0, 0);
+                    destroyBug();
+                }
+            }
+        }
+
+        function destroyBug() {
+
+            if (arrayBug.length > 0) {
+                for (var i = 1; i < arrayBug.length; i++) {
+                    arrayBug[i].destroy();
+                }
+            }
+        }
+        
+        function update() {}
+
+    </script>
+
+</body>
+
+</html>

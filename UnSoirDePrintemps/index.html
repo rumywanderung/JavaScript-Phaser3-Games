@@ -1,0 +1,221 @@
+<html>
+
+<head>
+
+    <title>Un Soir de Printemps</title>
+    <script src="phaser.min.js"></script>
+
+</head>
+
+<body>
+
+    <script>
+        var config = {
+
+            type: Phaser.AUTO,
+            width: 1000,
+            height: 640,
+            physics: {
+                default: 'arcade'
+            },
+
+            scene: {
+                preload: preload,
+                create: create,
+                update: update,
+            }
+        };
+        
+        var game = new Phaser.Game(config);
+        var resto;
+        var waffles;
+        //var k1;
+        var talkbox1;
+        var talkbox2;
+        var text1;
+        var score = 0;
+        
+        var arrayPassword = new Array();
+        
+        var pass1;
+        var pass2;
+        var pass3;
+        var pass4;
+        var pass5;
+        var pass6;
+        var pass7;
+        var pass8;
+        var pass9;
+        
+        var img1;
+        var img2;
+        var img3;
+        var img4;
+        
+        var music;
+        var win;
+        
+        function preload() { 
+            
+            //music
+            this.load.audio('piano', 'piano.ogg');
+            
+            this.load.image('k1', 'kar.png');
+            this.load.image('kBW', 'karBW.png');
+            //WORDS
+            this.load.image('whale', 'whale.png');
+            this.load.image('yolk', 'yolk.png');
+            this.load.image('dog', 'dog.png');
+            this.load.image('moon', 'moon.png');
+            //imgs
+            this.load.image('img1', 'I1.png');
+            this.load.image('img2', 'I2.png');
+            this.load.image('img3', 'I3.png');
+            this.load.image('img4', 'I4.png');
+            //
+            this.load.image('talkbox', 'talkbox.png');
+            this.load.image('pass1', 'L1.png');
+            this.load.image('pass2', 'L2.png');
+            this.load.image('pass3', 'L3.png');
+            this.load.image('pass4', 'L4.png');
+            this.load.image('pass5', 'L5.png');
+            this.load.image('pass6', 'L6.png');
+            this.load.image('pass7', 'L7.png');
+            this.load.image('pass8', 'L8.png');
+            this.load.image('pass9', 'L9.png');
+            
+            this.load.image('place1', 'place1.png');
+            this.load.image('place2', 'place2.png');
+            
+            var player;
+            // TILEMAP
+            this.load.tilemapTiledJSON('map1', 'DefMap.json');
+            this.load.image('tiles1', 'mapscroll.png');
+            //start
+            this.load.image('start', 'start.png');
+            // win
+            this.load.image('WIN', 'closingpage.png');
+        }
+        
+        function create() {
+            
+            music = this.sound.add('piano');
+            music.play();
+            
+            var map1 = this.make.tilemap({ key: 'map1' });
+            var tileset1 = map1.addTilesetImage('DefMap3', 'tiles1', 32, 32, 0, 0); //name 'jeux de tuiles'
+            var layer = map1.createStaticLayer(0, tileset1, 0, 0);
+            
+            cursors = this.input.keyboard.createCursorKeys();
+            
+             var controlConfig = {
+                camera: this.cameras.main,
+                left: cursors.left,
+                right: cursors.right,
+                speed: 0.3
+            };
+
+            controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
+            //TILEMAP CONTROL
+            this.cameras.main.setBounds(0, 0, layer.width);
+            // CHARACTERS
+            //resto = this.physics.add.image(220, 440, 'place1'); 
+            //waffles = this.physics.add.image(1700, 440, 'place2'); 
+            player = this.physics.add.image(600, 510, 'k1'); 
+            keyObj = this.input.keyboard.addKey('left');
+            img1 = this.physics.add.image(800, 500, 'img1');
+            img2 = this.physics.add.image(1000, 580, 'img2');
+            img3 = this.physics.add.image(1300, 480, 'img3');
+            img4 = this.physics.add.image(1900, 450, 'img4');
+            
+            
+            var StartPage = this.add.image(0, 0, 'start').setOrigin(0, 0).setInteractive();
+            
+            this.input.on('gameobjectdown', function(pointer, gameObject) {
+                gameObject.destroy();
+                score += 1;
+                console.log(score);
+            });
+        }
+        
+        function update(time, delta) { 
+            
+            player.setVelocity(0, 0);
+            
+            this.physics.add.collider(player, img1, Speak, null, this);
+            this.physics.add.collider(player, img2, Speak2, null, this);
+            this.physics.add.collider(player, img3, Speak3, null, this);
+            this.physics.add.collider(player, img4, Speak4, null, this);
+            this.physics.add.collider(player, talkbox2, ShowPassword, null, this);
+            
+            if (cursors.left.isDown) player.setVelocity(-300, 0);
+            if (cursors.right.isDown) player.setVelocity(300, 0);
+                //move = this.add.sprite(k1.x, k1.y, 'anim');
+                //move.play('move');
+                /*move.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
+                move.destroy();
+                });*/
+            controls.update(delta);
+        }
+        
+        function Speak(_player,_img1){
+            _img1.destroy();
+            img1 = this.physics.add.image(800, 500, 'whale');
+        }
+        function Speak2(_player,_img2){
+            _img2.destroy();
+            img2 = this.physics.add.image(1000, 580, 'yolk');
+        }
+        function Speak3(_player,_img3){
+            _img3.destroy();
+            img3 = this.physics.add.image(1300, 480, 'dog');
+        }
+        function Speak4(_player,_img4){
+            _img4.destroy();
+            img4 = this.physics.add.image(1900, 450, 'moon');
+            talkbox2 = this.physics.add.image(2900, 580, 'talkbox');
+        }
+        
+        function ShowPassword(_player, _talkbox2){
+            _talkbox2.destroy();
+
+            pass1 = this.physics.add.image(1900, 350, 'pass1').setInteractive();
+            pass2 = this.physics.add.image(2100, 350, 'pass2').setInteractive();
+            pass3 = this.physics.add.image(2300, 350, 'pass3').setInteractive();
+            pass4 = this.physics.add.image(1900, 250, 'pass4').setInteractive();
+            pass5 = this.physics.add.image(2100, 250, 'pass5');
+            pass6 = this.physics.add.image(2300, 250, 'pass6');
+            pass7 = this.physics.add.image(1900, 150, 'pass7');
+            pass8 = this.physics.add.image(2100, 150, 'pass8');
+            pass9 = this.physics.add.image(2300, 150, 'pass9');
+            
+            //COUNTDOWN
+            for (var i = 0; i < 60; i++) { 
+
+                timer = this.time.addEvent({
+                    delay: 500 * i,
+                    callback: Countdown,
+                    callbackScope: this
+                });
+            }
+        }
+        
+        function Countdown(){
+            
+            console.log('countdown');
+            if (score == 5) {
+                img4.destroy();
+                img3.destroy();
+                img2.destroy();
+                img1.destroy();
+                win = this.physics.add.image(0, 0, 'WIN').setOrigin(0, 0);
+                player = this.physics.add.image(player.x, player.y, 'kBW'); 
+                
+            }
+            
+            else {
+                // screen u lose
+            }
+        }
+        
+    </script> </body> </html>
